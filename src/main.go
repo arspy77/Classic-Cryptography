@@ -17,6 +17,7 @@ func main() {
 
 	tabs := widget.NewTabContainer(
 		widget.NewTabItem("Vigenere Cipher", screens.VigenereScreen()),
+		widget.NewTabItem("Auto Key Vigenere Cipher", screens.AutoKeyVigenereScreen()),
 	)
 
 	window.SetContent(tabs)

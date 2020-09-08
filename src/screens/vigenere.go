@@ -7,11 +7,11 @@ import (
 	"fyne.io/fyne/widget"
 )
 
-func encrypt(plainText *widget.Entry, key *widget.Entry, cipherText *widget.Entry) {
+func encryptVigenere(plainText *widget.Entry, key *widget.Entry, cipherText *widget.Entry) {
 	cipherText.SetText(cipher.Vigenere(plainText.Text, key.Text))
 }
 
-func decrypt(cipherText *widget.Entry, key *widget.Entry, plainText *widget.Entry) {
+func decryptVigenere(cipherText *widget.Entry, key *widget.Entry, plainText *widget.Entry) {
 	// TODO
 	plainText.SetText(cipher.DecipherVigenere(cipherText.Text, key.Text))
 }
@@ -26,7 +26,7 @@ func vigenereEncryptScreen() fyne.CanvasObject {
 	cipherText := widget.NewEntry()
 	cipherText.SetPlaceHolder("Cipher Text")
 
-	encryptButton := widget.NewButton("Encrypt", func() { encrypt(plainText, key, cipherText) })
+	encryptButton := widget.NewButton("Encrypt", func() { encryptVigenere(plainText, key, cipherText) })
 
 	return widget.NewVBox(
 		plainText,
@@ -46,7 +46,7 @@ func vigenereDecryptScreen() fyne.CanvasObject {
 	plainText := widget.NewEntry()
 	plainText.SetPlaceHolder("Plain Text")
 
-	decryptButton := widget.NewButton("Decrypt", func() { decrypt(cipherText, key, plainText) })
+	decryptButton := widget.NewButton("Decrypt", func() { decryptVigenere(cipherText, key, plainText) })
 
 	return widget.NewVBox(
 		cipherText,
