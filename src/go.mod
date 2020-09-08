@@ -8,3 +8,4 @@ require (
 )
 
 replace classiccrypto/screens => ./screens
+replace classiccrypto/cipher => ./cipher

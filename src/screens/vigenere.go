@@ -1,18 +1,19 @@
 package screens
 
 import (
+	"classiccrypto/cipher"
+
 	"fyne.io/fyne"
 	"fyne.io/fyne/widget"
 )
 
 func encrypt(plainText *widget.Entry, key *widget.Entry, cipherText *widget.Entry) {
-	// TODO
-	cipherText.SetText(plainText.Text + key.Text)
+	cipherText.SetText(cipher.Vigenere(plainText.Text, key.Text))
 }
 
 func decrypt(cipherText *widget.Entry, key *widget.Entry, plainText *widget.Entry) {
 	// TODO
-	plainText.SetText(cipherText.Text + key.Text)
+	plainText.SetText(cipher.DecipherVigenere(cipherText.Text, key.Text))
 }
 
 func vigenereEncryptScreen() fyne.CanvasObject {
