@@ -12,7 +12,6 @@ func encryptAutoKeyVigenere(plainText *widget.Entry, key *widget.Entry, cipherTe
 }
 
 func decryptAutoKeyVigenere(cipherText *widget.Entry, key *widget.Entry, plainText *widget.Entry) {
-	// TODO
 	plainText.SetText(cipher.DecipherAutoKeyVigenere(cipherText.Text, key.Text))
 }
 

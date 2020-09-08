@@ -12,7 +12,6 @@ func encryptVigenere(plainText *widget.Entry, key *widget.Entry, cipherText *wid
 }
 
 func decryptVigenere(cipherText *widget.Entry, key *widget.Entry, plainText *widget.Entry) {
-	// TODO
 	plainText.SetText(cipher.DecipherVigenere(cipherText.Text, key.Text))
 }
 
