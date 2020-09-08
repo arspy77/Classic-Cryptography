@@ -1,7 +1,7 @@
 package cipher
 
 import (
-	"fmt"
+	
 	"strings"
 )
 
@@ -15,9 +15,9 @@ func FullVigenere(plainText string, key string,alphabet string) string{
 	}
 	vKey = vKey[0:len(pText)]
 	for i := 0; i < len(pText); i++ {
-		fmt.Println("masuk")
+		
 		modulo := ((strings.Index(alphabet,string(pText[i]))+1)+(strings.Index(alphabet,string(vKey[i]))+1))%26
-		fmt.Println(strings.Index(alphabet,string(pText[i]))+1,string(pText[i]),strings.Index(alphabet,string(vKey[i]))+1,string(vKey[i]))
+		
 		if(modulo == 0){
 			modulo += 26
 		}

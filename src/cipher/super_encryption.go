@@ -1,7 +1,7 @@
 package cipher
 
 import (
-	"fmt"
+	
 	
 	"math"
 	
@@ -61,7 +61,7 @@ func DecipherTranspose(cipherText string,number int)string{
 			arrayText = append(arrayText,arrayChar)
 		}
 	}
-	fmt.Println(arrayChar)
+	
 	for j:= 0;j<no;j++{
 		for i:= 0;i<len(arrayText);i++{
 			if(len(arrayText[i])>j){
