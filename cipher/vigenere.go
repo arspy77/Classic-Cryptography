@@ -36,7 +36,7 @@ func Vigenere(plainText string, key string) string {
 
 }
 
-func DecipherVignere(cipherText string, key string) string {
+func DecipherVigenere(cipherText string, key string) string {
 	var vKey, pText string
 	vKey = ""
 	pText = ""
