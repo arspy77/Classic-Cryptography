@@ -19,6 +19,8 @@ func main() {
 		widget.NewTabItem("Vigenere", screens.VigenereScreen()),
 		widget.NewTabItem("Auto Key Vigenere", screens.AutoKeyVigenereScreen()),
 		widget.NewTabItem("Extended Vigenere", screens.ExtendedVigenereScreen()),
+		widget.NewTabItem("Hill", screens.HillScreen()),
+		widget.NewTabItem("Affine", screens.AffineScreen()),
 	)
 
 	window.SetContent(tabs)
