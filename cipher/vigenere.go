@@ -30,6 +30,9 @@ func Vigenere(plainText string, key string) string {
 
 	for i := 0; i < len(pText); i++ {
 		modulo := ((int(pText[i]) - 64) + (int(vKey[i]) - 64)) % 26
+		if(modulo == 0){
+			modulo += 26
+		}
 		cText = cText + string(rune(modulo+64))
 	}
 	return cText
@@ -51,6 +54,9 @@ func DecipherVigenere(cipherText string, key string) string {
 		if cipherText[i] < vKey[i] {
 			modulo = ((cipherText[i] - 64) - (vKey[i] - 64)) + 26
 
+		}
+		if(modulo == 0){
+			modulo += 26
 		}
 
 		pText = pText + string(rune(modulo+64))
