@@ -16,8 +16,9 @@ func main() {
 	window := app.NewWindow("Classic Cryptography")
 
 	tabs := widget.NewTabContainer(
-		widget.NewTabItem("Vigenere Cipher", screens.VigenereScreen()),
-		widget.NewTabItem("Auto Key Vigenere Cipher", screens.AutoKeyVigenereScreen()),
+		widget.NewTabItem("Vigenere", screens.VigenereScreen()),
+		widget.NewTabItem("Auto Key Vigenere", screens.AutoKeyVigenereScreen()),
+		widget.NewTabItem("Extended Vigenere", screens.ExtendedVigenereScreen()),
 	)
 
 	window.SetContent(tabs)
