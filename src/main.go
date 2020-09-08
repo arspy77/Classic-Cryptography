@@ -18,7 +18,10 @@ func main() {
 	tabs := widget.NewTabContainer(
 		widget.NewTabItem("Vigenere", screens.VigenereScreen()),
 		widget.NewTabItem("Auto Key Vigenere", screens.AutoKeyVigenereScreen()),
+		widget.NewTabItem("Full Vigenere", screens.FullVigenereScreen()),
 		widget.NewTabItem("Extended Vigenere", screens.ExtendedVigenereScreen()),
+		widget.NewTabItem("Playfair", screens.PlayfairScreen()),
+		widget.NewTabItem("Super Encryption", screens.SuperEncryptionScreen()),
 		widget.NewTabItem("Hill", screens.HillScreen()),
 		widget.NewTabItem("Affine", screens.AffineScreen()),
 	)
