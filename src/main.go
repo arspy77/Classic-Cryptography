@@ -27,7 +27,7 @@ func main() {
 	)
 
 	window.SetContent(tabs)
-	window.Resize(fyne.NewSize(800, 600))
+	window.Resize(fyne.NewSize(1280, 720))
 	window.SetFixedSize(true)
 	window.ShowAndRun()
 }

@@ -2,8 +2,10 @@ package screens
 
 import (
 	"classiccrypto/cipher"
+	"io/ioutil"
 
 	"fyne.io/fyne"
+	"fyne.io/fyne/dialog"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/widget"
 )
@@ -43,10 +45,43 @@ func fullVigenereEncryptScreen(window fyne.Window) fyne.CanvasObject {
 	groupedCipherText.Wrapping = fyne.TextWrapWord
 	groupedCipherText.SetPlaceHolder("Grouped Cipher Text")
 
-	encryptButton := widget.NewButton("Encrypt and show in the field below", func() { encryptFullVigenere(plainText, key, alphabet, cipherText, groupedCipherText) })
+	encryptButton := widget.NewButton("Encrypt and show in the field below", func() {
+		if key.Text != "" && len(alphabet.Text) == 26 {
+			encryptFullVigenere(plainText, key, alphabet, cipherText, groupedCipherText)
+		}
+	})
 
 	saveFileButton := widget.NewButton("Encrypt and save to a File", func() {
-		saveTextToFile(cipher.FullVigenere(plainText.Text, key.Text, alphabet.Text), window)
+		if key.Text != "" && len(alphabet.Text) == 26 {
+			saveTextToFile(cipher.FullVigenere(plainText.Text, key.Text, alphabet.Text), window)
+		}
+	})
+
+	loadAndSaveButton := widget.NewButton("Choose a file to encrypt and save to another File (For Large Files)", func() {
+		if key.Text != "" && len(alphabet.Text) == 26 {
+			fd := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+				if err != nil || reader != nil {
+					if err != nil {
+						dialog.ShowError(err, window)
+						return
+					}
+
+					data, err := ioutil.ReadAll(reader)
+					if err != nil {
+						fyne.LogError("Failed to load text data", err)
+						dialog.ShowError(err, window)
+
+					} else if data == nil {
+
+					} else {
+						saveTextToFile(cipher.FullVigenere(string(data), key.Text, alphabet.Text), window)
+					}
+
+				}
+			}, window)
+			fd.Show()
+		}
+
 	})
 
 	return fyne.NewContainerWithLayout(
@@ -69,6 +104,7 @@ func fullVigenereEncryptScreen(window fyne.Window) fyne.CanvasObject {
 			groupedCipherText,
 		),
 		saveFileButton,
+		loadAndSaveButton,
 	)
 }
 
@@ -93,10 +129,43 @@ func fullVigenereDecryptScreen(window fyne.Window) fyne.CanvasObject {
 	plainText.Wrapping = fyne.TextWrapWord
 	plainText.SetPlaceHolder("Plain Text")
 
-	decryptButton := widget.NewButton("Decrypt and show in the field below", func() { decryptFullVigenere(cipherText, key, alphabet, plainText) })
+	decryptButton := widget.NewButton("Decrypt and show in the field below", func() {
+		if key.Text != "" && len(alphabet.Text) == 26 {
+			decryptFullVigenere(cipherText, key, alphabet, plainText)
+		}
+	})
 
 	saveFileButton := widget.NewButton("Decrypt and save to a File", func() {
-		saveTextToFile(cipher.DecipherFullVigenere(cipherText.Text, key.Text, alphabet.Text), window)
+		if key.Text != "" && len(alphabet.Text) == 26 {
+			saveTextToFile(cipher.DecipherFullVigenere(cipherText.Text, key.Text, alphabet.Text), window)
+		}
+	})
+
+	loadAndSaveButton := widget.NewButton("Choose a file to decrypt and save to another File (For Large Files)", func() {
+		if key.Text != "" && len(alphabet.Text) == 26 {
+			fd := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+				if err != nil || reader != nil {
+					if err != nil {
+						dialog.ShowError(err, window)
+						return
+					}
+
+					data, err := ioutil.ReadAll(reader)
+					if err != nil {
+						fyne.LogError("Failed to load text data", err)
+						dialog.ShowError(err, window)
+
+					} else if data == nil {
+
+					} else {
+						saveTextToFile(cipher.DecipherFullVigenere(string(data), key.Text, alphabet.Text), window)
+					}
+
+				}
+			}, window)
+			fd.Show()
+		}
+
 	})
 
 	return fyne.NewContainerWithLayout(
@@ -116,6 +185,7 @@ func fullVigenereDecryptScreen(window fyne.Window) fyne.CanvasObject {
 			plainText,
 		),
 		saveFileButton,
+		loadAndSaveButton,
 	)
 }
 

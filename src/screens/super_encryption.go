@@ -2,10 +2,12 @@ package screens
 
 import (
 	"classiccrypto/cipher"
+	"io/ioutil"
 
 	"strconv"
 
 	"fyne.io/fyne"
+	"fyne.io/fyne/dialog"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/widget"
 )
@@ -47,11 +49,45 @@ func superEncryptionEncryptScreen(window fyne.Window) fyne.CanvasObject {
 	groupedCipherText.Wrapping = fyne.TextWrapWord
 	groupedCipherText.SetPlaceHolder("Grouped Cipher Text")
 
-	encryptButton := widget.NewButton("Encrypt and show in the field below", func() { encryptSuperEncryption(plainText, key, number, cipherText, groupedCipherText) })
+	encryptButton := widget.NewButton("Encrypt and show in the field below", func() {
+		if key.Text != "" && number.Text != "" {
+			encryptSuperEncryption(plainText, key, number, cipherText, groupedCipherText)
+		}
+	})
 
 	n, _ := strconv.Atoi(number.Text)
 	saveFileButton := widget.NewButton("Encrypt and save to a File", func() {
-		saveTextToFile(cipher.SuperEncryption(plainText.Text, key.Text, n), window)
+		if key.Text != "" && number.Text != "" {
+			saveTextToFile(cipher.SuperEncryption(plainText.Text, key.Text, n), window)
+		}
+	})
+
+	loadAndSaveButton := widget.NewButton("Choose a file to encrypt and save to another File (For Large Files)", func() {
+		if key.Text != "" && number.Text != "" {
+			fd := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+				if err != nil || reader != nil {
+					if err != nil {
+						dialog.ShowError(err, window)
+						return
+					}
+
+					data, err := ioutil.ReadAll(reader)
+					if err != nil {
+						fyne.LogError("Failed to load text data", err)
+						dialog.ShowError(err, window)
+
+					} else if data == nil {
+
+					} else {
+						n, _ := strconv.Atoi(number.Text)
+						saveTextToFile(cipher.SuperEncryption(string(data), key.Text, n), window)
+					}
+
+				}
+			}, window)
+			fd.Show()
+		}
+
 	})
 
 	return fyne.NewContainerWithLayout(
@@ -74,6 +110,7 @@ func superEncryptionEncryptScreen(window fyne.Window) fyne.CanvasObject {
 			groupedCipherText,
 		),
 		saveFileButton,
+		loadAndSaveButton,
 	)
 }
 
@@ -98,11 +135,45 @@ func superEncryptionDecryptScreen(window fyne.Window) fyne.CanvasObject {
 	plainText.Wrapping = fyne.TextWrapWord
 	plainText.SetPlaceHolder("Plain Text")
 
-	decryptButton := widget.NewButton("Decrypt and show in the field below", func() { decryptSuperEncryption(cipherText, key, number, plainText) })
+	decryptButton := widget.NewButton("Decrypt and show in the field below", func() {
+		if key.Text != "" && number.Text != "" {
+			decryptSuperEncryption(cipherText, key, number, plainText)
+		}
+	})
 
 	n, _ := strconv.Atoi(number.Text)
 	saveFileButton := widget.NewButton("Decrypt and save to a File", func() {
-		saveTextToFile(cipher.DecipherSuperEncryption(cipherText.Text, key.Text, n), window)
+		if key.Text != "" && number.Text != "" {
+			saveTextToFile(cipher.DecipherSuperEncryption(cipherText.Text, key.Text, n), window)
+		}
+	})
+
+	loadAndSaveButton := widget.NewButton("Choose a file to decrypt and save to another File (For Large Files)", func() {
+		if key.Text != "" && number.Text != "" {
+			fd := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+				if err != nil || reader != nil {
+					if err != nil {
+						dialog.ShowError(err, window)
+						return
+					}
+
+					data, err := ioutil.ReadAll(reader)
+					if err != nil {
+						fyne.LogError("Failed to load text data", err)
+						dialog.ShowError(err, window)
+
+					} else if data == nil {
+
+					} else {
+						n, _ := strconv.Atoi(number.Text)
+						saveTextToFile(cipher.DecipherSuperEncryption(string(data), key.Text, n), window)
+					}
+
+				}
+			}, window)
+			fd.Show()
+		}
+
 	})
 
 	return fyne.NewContainerWithLayout(
@@ -122,6 +193,7 @@ func superEncryptionDecryptScreen(window fyne.Window) fyne.CanvasObject {
 			plainText,
 		),
 		saveFileButton,
+		loadAndSaveButton,
 	)
 }
 

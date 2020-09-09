@@ -41,10 +41,16 @@ func extendedVigenereEncryptScreen(window fyne.Window) fyne.CanvasObject {
 	groupedCipherText.Wrapping = fyne.TextWrapWord
 	groupedCipherText.SetPlaceHolder("Grouped Cipher Text")
 
-	encryptButton := widget.NewButton("Encrypt and show in the field below", func() { encryptExtendedVigenere(plainText, key, cipherText, groupedCipherText) })
+	encryptButton := widget.NewButton("Encrypt and show in the field below", func() {
+		if key.Text != "" {
+			encryptExtendedVigenere(plainText, key, cipherText, groupedCipherText)
+		}
+	})
 
 	saveFileButton := widget.NewButton("Encrypt and save to a File", func() {
-		saveBytesToFile(cipher.ExtendedVigenere([]byte(plainText.Text), key.Text), window)
+		if key.Text != "" {
+			saveBytesToFile(cipher.ExtendedVigenere([]byte(plainText.Text), key.Text), window)
+		}
 	})
 
 	loadAndSaveButton := widget.NewButton("Choose a file to encrypt and save to another File (For Large Files)", func() {
@@ -109,10 +115,16 @@ func extendedVigenereDecryptScreen(window fyne.Window) fyne.CanvasObject {
 	plainText.Wrapping = fyne.TextWrapWord
 	plainText.SetPlaceHolder("Plain Text")
 
-	decryptButton := widget.NewButton("Decrypt and show in the field below", func() { decryptExtendedVigenere(cipherText, key, plainText) })
+	decryptButton := widget.NewButton("Decrypt and show in the field below", func() {
+		if key.Text != "" {
+			decryptExtendedVigenere(cipherText, key, plainText)
+		}
+	})
 
 	saveFileButton := widget.NewButton("Decrypt and save to a File", func() {
-		saveBytesToFile(cipher.ExtendedVigenere([]byte(cipherText.Text), key.Text), window)
+		if key.Text != "" {
+			saveBytesToFile(cipher.ExtendedVigenere([]byte(cipherText.Text), key.Text), window)
+		}
 	})
 
 	loadAndSaveButton := widget.NewButton("Choose a file to decrypt and save to another File (For Large Files)", func() {

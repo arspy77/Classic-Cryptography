@@ -2,8 +2,10 @@ package screens
 
 import (
 	"classiccrypto/cipher"
+	"io/ioutil"
 
 	"fyne.io/fyne"
+	"fyne.io/fyne/dialog"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/widget"
 )
@@ -39,10 +41,43 @@ func playfairEncryptScreen(window fyne.Window) fyne.CanvasObject {
 	groupedCipherText.Wrapping = fyne.TextWrapWord
 	groupedCipherText.SetPlaceHolder("Grouped Cipher Text")
 
-	encryptButton := widget.NewButton("Encrypt and show in the field below", func() { encryptPlayfair(plainText, key, cipherText, groupedCipherText) })
+	encryptButton := widget.NewButton("Encrypt and show in the field below", func() {
+		if key.Text != "" {
+			encryptPlayfair(plainText, key, cipherText, groupedCipherText)
+		}
+	})
 
 	saveFileButton := widget.NewButton("Encrypt and save to a File", func() {
-		saveTextToFile(cipher.Playfair(plainText.Text, key.Text), window)
+		if key.Text != "" {
+			saveTextToFile(cipher.Playfair(plainText.Text, key.Text), window)
+		}
+	})
+
+	loadAndSaveButton := widget.NewButton("Choose a file to encrypt and save to another File (For Large Files)", func() {
+		if key.Text != "" {
+			fd := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+				if err != nil || reader != nil {
+					if err != nil {
+						dialog.ShowError(err, window)
+						return
+					}
+
+					data, err := ioutil.ReadAll(reader)
+					if err != nil {
+						fyne.LogError("Failed to load text data", err)
+						dialog.ShowError(err, window)
+
+					} else if data == nil {
+
+					} else {
+						saveTextToFile(cipher.Playfair(string(data), key.Text), window)
+					}
+
+				}
+			}, window)
+			fd.Show()
+		}
+
 	})
 
 	return fyne.NewContainerWithLayout(
@@ -62,6 +97,7 @@ func playfairEncryptScreen(window fyne.Window) fyne.CanvasObject {
 			groupedCipherText,
 		),
 		saveFileButton,
+		loadAndSaveButton,
 	)
 }
 
@@ -82,10 +118,43 @@ func playfairDecryptScreen(window fyne.Window) fyne.CanvasObject {
 	plainText.Wrapping = fyne.TextWrapWord
 	plainText.SetPlaceHolder("Plain Text")
 
-	decryptButton := widget.NewButton("Decrypt and show in the field below", func() { decryptPlayfair(cipherText, key, plainText) })
+	decryptButton := widget.NewButton("Decrypt and show in the field below", func() {
+		if key.Text != "" {
+			decryptPlayfair(cipherText, key, plainText)
+		}
+	})
 
 	saveFileButton := widget.NewButton("Decrypt and save to a File", func() {
-		saveTextToFile(cipher.DecipherPlayfair(cipherText.Text, key.Text), window)
+		if key.Text != "" {
+			saveTextToFile(cipher.DecipherPlayfair(cipherText.Text, key.Text), window)
+		}
+	})
+
+	loadAndSaveButton := widget.NewButton("Choose a file to decrypt and save to another File (For Large Files)", func() {
+		if key.Text != "" {
+			fd := dialog.NewFileOpen(func(reader fyne.URIReadCloser, err error) {
+				if err != nil || reader != nil {
+					if err != nil {
+						dialog.ShowError(err, window)
+						return
+					}
+
+					data, err := ioutil.ReadAll(reader)
+					if err != nil {
+						fyne.LogError("Failed to load text data", err)
+						dialog.ShowError(err, window)
+
+					} else if data == nil {
+
+					} else {
+						saveTextToFile(cipher.DecipherPlayfair(string(data), key.Text), window)
+					}
+
+				}
+			}, window)
+			fd.Show()
+		}
+
 	})
 
 	return fyne.NewContainerWithLayout(
@@ -102,6 +171,7 @@ func playfairDecryptScreen(window fyne.Window) fyne.CanvasObject {
 			plainText,
 		),
 		saveFileButton,
+		loadAndSaveButton,
 	)
 }
 
