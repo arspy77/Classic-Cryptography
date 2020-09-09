@@ -3,9 +3,21 @@
 A Desktop App to simulate various classic cryptography using Go with Fyne.
 
 ## Libraries Used
+
 Below are the libraries used in this project:
-1. Fyne
-2. Gonum
+
+1. fyne.io/fyne v1.3.3
+2. gonum.org/v1/gonum v0.8.1
+
+## How to Use
+
+First off, you need to install Go.
+
+Then, use the following command in the src directory to build the application:
+
+    go build
+
+After that the executable will be created on the same folder
 
 ## The Keys of each Algorithm
 
@@ -51,5 +63,5 @@ Each '|' represents a border between columns and ',' between rows. So the above 
 
 ### 8. Affine Cipher
 
-The M key must be relative prime with 26
-The B key can be any integer
+The M key must be relative prime with 26.
+The B key can be any integer.
