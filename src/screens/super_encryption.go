@@ -10,9 +10,11 @@ import (
 	"fyne.io/fyne/widget"
 )
 
-func encryptSuperEncryption(plainText *widget.Entry, key *widget.Entry, number *widget.Entry, cipherText *widget.Entry) {
+func encryptSuperEncryption(plainText *widget.Entry, key *widget.Entry, number *widget.Entry, cipherText *widget.Entry, groupedCipherText *widget.Entry) {
 	n, _ := strconv.Atoi(number.Text)
-	cipherText.SetText(cipher.SuperEncryption(plainText.Text, key.Text, n))
+	cipher := cipher.SuperEncryption(plainText.Text, key.Text, n)
+	cipherText.SetText(cipher)
+	groupedCipherText.SetText(insertSpaceEvery5Char(cipher))
 }
 
 func decryptSuperEncryption(cipherText *widget.Entry, key *widget.Entry, number *widget.Entry, plainText *widget.Entry) {
@@ -41,7 +43,11 @@ func superEncryptionEncryptScreen(window fyne.Window) fyne.CanvasObject {
 	cipherText.Wrapping = fyne.TextWrapWord
 	cipherText.SetPlaceHolder("Cipher Text")
 
-	encryptButton := widget.NewButton("Encrypt and show in the field below", func() { encryptSuperEncryption(plainText, key, number, cipherText) })
+	groupedCipherText := widget.NewMultiLineEntry()
+	groupedCipherText.Wrapping = fyne.TextWrapWord
+	groupedCipherText.SetPlaceHolder("Grouped Cipher Text")
+
+	encryptButton := widget.NewButton("Encrypt and show in the field below", func() { encryptSuperEncryption(plainText, key, number, cipherText, groupedCipherText) })
 
 	n, _ := strconv.Atoi(number.Text)
 	saveFileButton := widget.NewButton("Encrypt and save to a File", func() {
@@ -63,6 +69,9 @@ func superEncryptionEncryptScreen(window fyne.Window) fyne.CanvasObject {
 		encryptButton,
 		widget.NewVScrollContainer(
 			cipherText,
+		),
+		widget.NewVScrollContainer(
+			groupedCipherText,
 		),
 		saveFileButton,
 	)

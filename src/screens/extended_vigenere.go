@@ -10,8 +10,10 @@ import (
 	"fyne.io/fyne/widget"
 )
 
-func encryptExtendedVigenere(plainText *widget.Entry, key *widget.Entry, cipherText *widget.Entry) {
-	cipherText.SetText(string(cipher.ExtendedVigenere([]byte(plainText.Text), key.Text)))
+func encryptExtendedVigenere(plainText *widget.Entry, key *widget.Entry, cipherText *widget.Entry, groupedCipherText *widget.Entry) {
+	cipher := string(cipher.ExtendedVigenere([]byte(plainText.Text), key.Text))
+	cipherText.SetText(cipher)
+	groupedCipherText.SetText(insertSpaceEvery5Char(cipher))
 }
 
 func decryptExtendedVigenere(cipherText *widget.Entry, key *widget.Entry, plainText *widget.Entry) {
@@ -35,7 +37,11 @@ func extendedVigenereEncryptScreen(window fyne.Window) fyne.CanvasObject {
 	cipherText.Wrapping = fyne.TextWrapWord
 	cipherText.SetPlaceHolder("Cipher Text")
 
-	encryptButton := widget.NewButton("Encrypt and show in the field below", func() { encryptExtendedVigenere(plainText, key, cipherText) })
+	groupedCipherText := widget.NewMultiLineEntry()
+	groupedCipherText.Wrapping = fyne.TextWrapWord
+	groupedCipherText.SetPlaceHolder("Grouped Cipher Text")
+
+	encryptButton := widget.NewButton("Encrypt and show in the field below", func() { encryptExtendedVigenere(plainText, key, cipherText, groupedCipherText) })
 
 	saveFileButton := widget.NewButton("Encrypt and save to a File", func() {
 		saveBytesToFile(cipher.ExtendedVigenere([]byte(plainText.Text), key.Text), window)
@@ -77,6 +83,9 @@ func extendedVigenereEncryptScreen(window fyne.Window) fyne.CanvasObject {
 		encryptButton,
 		widget.NewVScrollContainer(
 			cipherText,
+		),
+		widget.NewVScrollContainer(
+			groupedCipherText,
 		),
 		saveFileButton,
 		loadAndSaveButton,
