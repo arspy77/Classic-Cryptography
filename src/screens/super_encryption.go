@@ -3,73 +3,123 @@ package screens
 import (
 	"classiccrypto/cipher"
 
-	"fyne.io/fyne"
-	"fyne.io/fyne/widget"
 	"strconv"
+
+	"fyne.io/fyne"
+	"fyne.io/fyne/layout"
+	"fyne.io/fyne/widget"
 )
 
-func encryptSuperEncryption(plainText *widget.Entry, key *widget.Entry,number *widget.Entry, cipherText *widget.Entry) {
-	n,_ := strconv.Atoi(number.Text)
-	cipherText.SetText(cipher.SuperEncryption(plainText.Text, key.Text,n))
+func encryptSuperEncryption(plainText *widget.Entry, key *widget.Entry, number *widget.Entry, cipherText *widget.Entry) {
+	n, _ := strconv.Atoi(number.Text)
+	cipherText.SetText(cipher.SuperEncryption(plainText.Text, key.Text, n))
 }
 
-func decryptSuperEncryption(cipherText *widget.Entry, key *widget.Entry,number *widget.Entry, plainText *widget.Entry) {
-	n,_ := strconv.Atoi(number.Text)
-	plainText.SetText(cipher.DecipherSuperEncryption(cipherText.Text, key.Text,n))
+func decryptSuperEncryption(cipherText *widget.Entry, key *widget.Entry, number *widget.Entry, plainText *widget.Entry) {
+	n, _ := strconv.Atoi(number.Text)
+	plainText.SetText(cipher.DecipherSuperEncryption(cipherText.Text, key.Text, n))
 }
 
-func superEncryptionEncryptScreen() fyne.CanvasObject {
-	plainText := widget.NewEntry()
+func superEncryptionEncryptScreen(window fyne.Window) fyne.CanvasObject {
+	plainText := widget.NewMultiLineEntry()
+	plainText.Wrapping = fyne.TextWrapWord
 	plainText.SetPlaceHolder("Plain Text")
 
-	key := widget.NewEntry()
+	loadFileButton := widget.NewButton("Choose File to Load Plain Text and show in the field below", func() {
+		loadTextFromFileToEntry(plainText, window)
+	})
+
+	key := widget.NewMultiLineEntry()
+	key.Wrapping = fyne.TextWrapWord
 	key.SetPlaceHolder("Key")
 
-	number := widget.NewEntry()
-	number.SetPlaceHolder("Enter a Random Number")
+	number := widget.NewMultiLineEntry()
+	number.Wrapping = fyne.TextWrapWord
+	number.SetPlaceHolder("Enter a Number for the Transposition")
 
-	cipherText := widget.NewEntry()
+	cipherText := widget.NewMultiLineEntry()
+	cipherText.Wrapping = fyne.TextWrapWord
 	cipherText.SetPlaceHolder("Cipher Text")
 
-	encryptButton := widget.NewButton("Encrypt", func() { encryptSuperEncryption(plainText, key,number, cipherText) })
+	encryptButton := widget.NewButton("Encrypt and show in the field below", func() { encryptSuperEncryption(plainText, key, number, cipherText) })
 
-	return widget.NewVBox(
-		plainText,
-		key,
-		number,
+	n, _ := strconv.Atoi(number.Text)
+	saveFileButton := widget.NewButton("Encrypt and save to a File", func() {
+		saveTextToFile(cipher.SuperEncryption(plainText.Text, key.Text, n), window)
+	})
+
+	return fyne.NewContainerWithLayout(
+		layout.NewGridLayout(1),
+		loadFileButton,
+		widget.NewVScrollContainer(
+			plainText,
+		),
+		widget.NewVScrollContainer(
+			key,
+		),
+		widget.NewVScrollContainer(
+			number,
+		),
 		encryptButton,
-		cipherText,
+		widget.NewVScrollContainer(
+			cipherText,
+		),
+		saveFileButton,
 	)
 }
 
-func superEncryptionDecryptScreen() fyne.CanvasObject {
-	cipherText := widget.NewEntry()
+func superEncryptionDecryptScreen(window fyne.Window) fyne.CanvasObject {
+	cipherText := widget.NewMultiLineEntry()
+	cipherText.Wrapping = fyne.TextWrapWord
 	cipherText.SetPlaceHolder("Cipher Text")
 
-	key := widget.NewEntry()
+	loadFileButton := widget.NewButton("Choose File to Load Cipher Text and show in the field below", func() {
+		loadTextFromFileToEntry(cipherText, window)
+	})
+
+	key := widget.NewMultiLineEntry()
+	key.Wrapping = fyne.TextWrapWord
 	key.SetPlaceHolder("Key")
 
-	number := widget.NewEntry()
-	number.SetPlaceHolder("Enter a Random Number")
+	number := widget.NewMultiLineEntry()
+	number.Wrapping = fyne.TextWrapWord
+	number.SetPlaceHolder("Enter a Number for the Transposition")
 
-	plainText := widget.NewEntry()
+	plainText := widget.NewMultiLineEntry()
+	plainText.Wrapping = fyne.TextWrapWord
 	plainText.SetPlaceHolder("Plain Text")
 
-	decryptButton := widget.NewButton("Decrypt", func() { decryptSuperEncryption(cipherText, key,number, plainText) })
+	decryptButton := widget.NewButton("Decrypt and show in the field below", func() { decryptSuperEncryption(cipherText, key, number, plainText) })
 
-	return widget.NewVBox(
-		cipherText,
-		key,
-		number,
+	n, _ := strconv.Atoi(number.Text)
+	saveFileButton := widget.NewButton("Decrypt and save to a File", func() {
+		saveTextToFile(cipher.DecipherSuperEncryption(cipherText.Text, key.Text, n), window)
+	})
+
+	return fyne.NewContainerWithLayout(
+		layout.NewGridLayout(1),
+		loadFileButton,
+		widget.NewVScrollContainer(
+			cipherText,
+		),
+		widget.NewVScrollContainer(
+			key,
+		),
+		widget.NewVScrollContainer(
+			number,
+		),
 		decryptButton,
-		plainText,
+		widget.NewVScrollContainer(
+			plainText,
+		),
+		saveFileButton,
 	)
 }
 
-func SuperEncryptionScreen() fyne.CanvasObject {
+func SuperEncryptionScreen(window fyne.Window) fyne.CanvasObject {
 	tabs := widget.NewTabContainer(
-		widget.NewTabItem("Encryption", superEncryptionEncryptScreen()),
-		widget.NewTabItem("Decryption", superEncryptionDecryptScreen()),
+		widget.NewTabItem("Encryption", superEncryptionEncryptScreen(window)),
+		widget.NewTabItem("Decryption", superEncryptionDecryptScreen(window)),
 	)
 	return tabs
 }

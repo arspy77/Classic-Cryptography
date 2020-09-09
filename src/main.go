@@ -16,17 +16,18 @@ func main() {
 	window := app.NewWindow("Classic Cryptography")
 
 	tabs := widget.NewTabContainer(
-		widget.NewTabItem("Vigenere", screens.VigenereScreen()),
-		widget.NewTabItem("Auto Key Vigenere", screens.AutoKeyVigenereScreen()),
-		widget.NewTabItem("Full Vigenere", screens.FullVigenereScreen()),
-		widget.NewTabItem("Extended Vigenere", screens.ExtendedVigenereScreen()),
-		widget.NewTabItem("Playfair", screens.PlayfairScreen()),
-		widget.NewTabItem("Super Encryption", screens.SuperEncryptionScreen()),
-		widget.NewTabItem("Hill", screens.HillScreen()),
-		widget.NewTabItem("Affine", screens.AffineScreen()),
+		widget.NewTabItem("Vigenere", screens.VigenereScreen(window)),
+		widget.NewTabItem("Auto Key Vigenere", screens.AutoKeyVigenereScreen(window)),
+		widget.NewTabItem("Full Vigenere", screens.FullVigenereScreen(window)),
+		widget.NewTabItem("Extended Vigenere", screens.ExtendedVigenereScreen(window)),
+		widget.NewTabItem("Playfair", screens.PlayfairScreen(window)),
+		widget.NewTabItem("Super Encryption", screens.SuperEncryptionScreen(window)),
+		widget.NewTabItem("Hill", screens.HillScreen(window)),
+		widget.NewTabItem("Affine", screens.AffineScreen(window)),
 	)
 
 	window.SetContent(tabs)
 	window.Resize(fyne.NewSize(800, 600))
+	window.SetFixedSize(true)
 	window.ShowAndRun()
 }

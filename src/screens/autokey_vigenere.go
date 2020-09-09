@@ -4,6 +4,7 @@ import (
 	"classiccrypto/cipher"
 
 	"fyne.io/fyne"
+	"fyne.io/fyne/layout"
 	"fyne.io/fyne/widget"
 )
 
@@ -15,50 +16,90 @@ func decryptAutoKeyVigenere(cipherText *widget.Entry, key *widget.Entry, plainTe
 	plainText.SetText(cipher.DecipherAutoKeyVigenere(cipherText.Text, key.Text))
 }
 
-func autoKeyVigenereEncryptScreen() fyne.CanvasObject {
-	plainText := widget.NewEntry()
+func autoKeyVigenereEncryptScreen(window fyne.Window) fyne.CanvasObject {
+	plainText := widget.NewMultiLineEntry()
+	plainText.Wrapping = fyne.TextWrapWord
 	plainText.SetPlaceHolder("Plain Text")
 
-	key := widget.NewEntry()
+	loadFileButton := widget.NewButton("Choose File to Load Plain Text and show in the field below", func() {
+		loadTextFromFileToEntry(plainText, window)
+	})
+
+	key := widget.NewMultiLineEntry()
+	key.Wrapping = fyne.TextWrapWord
 	key.SetPlaceHolder("Key")
 
-	cipherText := widget.NewEntry()
+	cipherText := widget.NewMultiLineEntry()
+	cipherText.Wrapping = fyne.TextWrapWord
 	cipherText.SetPlaceHolder("Cipher Text")
 
-	encryptButton := widget.NewButton("Encrypt", func() { encryptAutoKeyVigenere(plainText, key, cipherText) })
+	encryptButton := widget.NewButton("Encrypt and show in the field below", func() { encryptAutoKeyVigenere(plainText, key, cipherText) })
 
-	return widget.NewVBox(
-		plainText,
-		key,
+	saveFileButton := widget.NewButton("Encrypt and save to a File", func() {
+		saveTextToFile(cipher.AutoKeyVigenere(plainText.Text, key.Text), window)
+	})
+
+	return fyne.NewContainerWithLayout(
+		layout.NewGridLayout(1),
+		loadFileButton,
+		widget.NewVScrollContainer(
+			plainText,
+		),
+		widget.NewVScrollContainer(
+			key,
+		),
 		encryptButton,
-		cipherText,
+		widget.NewVScrollContainer(
+			cipherText,
+		),
+		saveFileButton,
 	)
 }
 
-func autoKeyVigenereDecryptScreen() fyne.CanvasObject {
-	cipherText := widget.NewEntry()
+func autoKeyVigenereDecryptScreen(window fyne.Window) fyne.CanvasObject {
+	cipherText := widget.NewMultiLineEntry()
+	cipherText.Wrapping = fyne.TextWrapWord
 	cipherText.SetPlaceHolder("Cipher Text")
 
-	key := widget.NewEntry()
+	loadFileButton := widget.NewButton("Choose File to Load Cipher Text and show in the field below", func() {
+		loadTextFromFileToEntry(cipherText, window)
+	})
+
+	key := widget.NewMultiLineEntry()
+	key.Wrapping = fyne.TextWrapWord
 	key.SetPlaceHolder("Key")
 
-	plainText := widget.NewEntry()
+	plainText := widget.NewMultiLineEntry()
+	plainText.Wrapping = fyne.TextWrapWord
 	plainText.SetPlaceHolder("Plain Text")
 
-	decryptButton := widget.NewButton("Decrypt", func() { decryptAutoKeyVigenere(cipherText, key, plainText) })
+	decryptButton := widget.NewButton("Decrypt and show in the field below", func() { decryptAutoKeyVigenere(cipherText, key, plainText) })
 
-	return widget.NewVBox(
-		cipherText,
-		key,
+	saveFileButton := widget.NewButton("Decrypt and save to a File", func() {
+		saveTextToFile(cipher.DecipherAutoKeyVigenere(cipherText.Text, key.Text), window)
+	})
+
+	return fyne.NewContainerWithLayout(
+		layout.NewGridLayout(1),
+		loadFileButton,
+		widget.NewVScrollContainer(
+			cipherText,
+		),
+		widget.NewVScrollContainer(
+			key,
+		),
 		decryptButton,
-		plainText,
+		widget.NewVScrollContainer(
+			plainText,
+		),
+		saveFileButton,
 	)
 }
 
-func AutoKeyVigenereScreen() fyne.CanvasObject {
+func AutoKeyVigenereScreen(window fyne.Window) fyne.CanvasObject {
 	tabs := widget.NewTabContainer(
-		widget.NewTabItem("Encryption", autoKeyVigenereEncryptScreen()),
-		widget.NewTabItem("Decryption", autoKeyVigenereDecryptScreen()),
+		widget.NewTabItem("Encryption", autoKeyVigenereEncryptScreen(window)),
+		widget.NewTabItem("Decryption", autoKeyVigenereDecryptScreen(window)),
 	)
 	return tabs
 }
